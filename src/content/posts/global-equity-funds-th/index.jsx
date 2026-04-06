@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import * as d3 from 'd3'
 import { useD3 } from '../../../hooks/useD3'
+import ContentSection from '../../../components/content/ContentSection'
+import ContentCard from '../../../components/content/ContentCard'
+import DataTable from '../../../components/content/DataTable'
+import StatGrid from '../../../components/content/StatGrid'
 
 // === FUND DATA ===
 const funds = [
@@ -221,111 +225,100 @@ export default function GlobalEquityFundsTh() {
   const [backtestIdx, setBacktestIdx] = useState(0)
 
   return (
-    <div>
-      {/* Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
-        {[
-          { value: '7', label: 'กองทุนที่วิเคราะห์', color: '#3b82f6' },
-          { value: 'K-GLOBE', label: 'ผลตอบแทน 1 ปี สูงสุด', color: '#10b981' },
-          { value: '0.97%', label: 'TER ต่ำสุด (K-GLOBE)', color: '#8b5cf6' },
-          { value: '~20 ปี', label: 'กองทุนเก่าแก่ที่สุด', color: '#06b6d4' },
-        ].map(s => (
-          <div key={s.label} className="glass-card p-5 text-center">
-            <div className="text-2xl font-black mb-1" style={{ color: s.color }}>{s.value}</div>
-            <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{s.label}</div>
-          </div>
-        ))}
-      </div>
+    <div className="article-content">
+      {/* Summary Stats */}
+      <StatGrid stats={[
+        { value: '7', label: 'กองทุนที่วิเคราะห์', color: '#3b82f6' },
+        { value: 'K-GLOBE', label: 'ผลตอบแทน 1 ปี สูงสุด', color: '#10b981' },
+        { value: '0.97%', label: 'TER ต่ำสุด (K-GLOBE)', color: '#8b5cf6' },
+        { value: '~20 ปี', label: 'กองทุนเก่าแก่ที่สุด', color: '#06b6d4' },
+      ]} />
 
-      {/* Fund Cards */}
-      <section className="mb-12">
-        <h2 className="text-xl font-bold mb-6 flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
-          <span className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: 'rgba(59,130,246,0.15)' }}>📊</span>
-          ภาพรวมกองทุน Global Equity ในประเทศไทย
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Fund Overview */}
+      <ContentSection
+        icon="📊"
+        iconBg="rgba(59,130,246,0.12)"
+        title="ภาพรวมกองทุน Global Equity ในประเทศไทย"
+      >
+        <div className="fund-card-grid">
           {funds.map((f, i) => (
-            <div key={f.code} className="glass-card p-5 animate-fade-in-up" style={{ animationDelay: `${i*0.05}s`, opacity: 0 }}>
-              <span className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-semibold mb-3 ${
-                f.typeBadge === 'acc' ? 'badge-investment' : 'badge-technology'
-              }`} style={{
-                background: f.typeBadge === 'both' ? 'rgba(245,158,11,0.12)' : undefined,
-                color: f.typeBadge === 'both' ? '#f59e0b' : undefined,
+            <div key={f.code} className="content-card animate-fade-in-up" style={{ animationDelay: `${i*0.05}s`, opacity: 0 }}>
+              <span style={{
+                display: 'inline-block', padding: '4px 12px', borderRadius: '9999px',
+                fontSize: '10px', fontWeight: 600, marginBottom: '1rem',
+                background: f.typeBadge === 'both' ? 'rgba(245,158,11,0.12)' : f.typeBadge === 'acc' ? 'rgba(139,92,246,0.12)' : 'rgba(59,130,246,0.12)',
+                color: f.typeBadge === 'both' ? '#f59e0b' : f.typeBadge === 'acc' ? '#8b5cf6' : '#3b82f6',
               }}>
                 {f.type}
               </span>
-              <div className="text-base font-bold mb-0.5" style={{ color: f.color }}>{f.code}</div>
-              <div className="text-xs mb-4" style={{ color: 'var(--color-text-muted)' }}>{f.company} • {f.masterFund}</div>
-              <div className="grid grid-cols-2 gap-2">
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: f.color, marginBottom: '0.25rem' }}>{f.code}</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '1.25rem' }}>
+                {f.company} • {f.masterFund}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem' }}>
                 {[
                   { label: 'NAV ปัจจุบัน', value: `${f.nav.toFixed(2)} ฿` },
-                  { label: 'ผลตอบแทน 1 ปี', value: `${f.ret1y >= 0 ? '+' : ''}${f.ret1y.toFixed(2)}%`, cls: f.ret1y >= 0 ? 'text-green-400' : 'text-red-400' },
+                  { label: 'ผลตอบแทน 1 ปี', value: `${f.ret1y >= 0 ? '+' : ''}${f.ret1y.toFixed(2)}%`, color: f.ret1y >= 0 ? '#10b981' : '#ef4444' },
                   { label: 'TER', value: `${f.ter.toFixed(2)}%` },
                   { label: 'จัดตั้ง', value: f.inception },
                 ].map(m => (
-                  <div key={m.label} className="p-2.5 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                    <div className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{m.label}</div>
-                    <div className={`text-sm font-semibold mt-0.5 ${m.cls || ''}`} style={!m.cls ? { color: 'var(--color-text-primary)' } : {}}>{m.value}</div>
+                  <div key={m.label} style={{ padding: '0.625rem', borderRadius: '10px', background: 'rgba(255,255,255,0.03)' }}>
+                    <div style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-muted)' }}>{m.label}</div>
+                    <div style={{ fontSize: '0.875rem', fontWeight: 600, marginTop: '0.25rem', color: m.color || 'var(--color-text-primary)' }}>{m.value}</div>
                   </div>
                 ))}
               </div>
             </div>
           ))}
         </div>
-      </section>
+      </ContentSection>
 
       {/* Fee Comparison */}
-      <section className="mb-12">
-        <h2 className="text-xl font-bold mb-6 flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
-          <span className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: 'rgba(245,158,11,0.15)' }}>💰</span>
-          เปรียบเทียบค่าธรรมเนียม
-        </h2>
-        <div className="glass-card p-6 mb-6">
-          <h3 className="text-base font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>ค่าธรรมเนียมรวม (Total Expense Ratio)</h3>
-          <p className="text-xs mb-5" style={{ color: 'var(--color-text-muted)' }}>ค่าใช้จ่ายรวมที่หักจากผลตอบแทนกองทุนต่อปี</p>
+      <ContentSection
+        icon="💰"
+        iconBg="rgba(245,158,11,0.12)"
+        title="เปรียบเทียบค่าธรรมเนียม"
+      >
+        <ContentCard
+          title="ค่าธรรมเนียมรวม (Total Expense Ratio)"
+          subtitle="ค่าใช้จ่ายรวมที่หักจากผลตอบแทนกองทุนต่อปี"
+          style={{ marginBottom: '1.5rem' }}
+        >
           <FeeChart />
-        </div>
-        <div className="glass-card overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                {['กองทุน','บลจ.','Mgmt Fee','TER','Front-End','Back-End','ประเภท','วันจัดตั้ง'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold whitespace-nowrap" style={{ color: 'var(--color-text-muted)', background: 'var(--color-bg-card)' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {funds.map(f => (
-                <tr key={f.code} className="hover:bg-white/[0.02] transition-colors" style={{ borderBottom: '1px solid rgba(42,53,85,0.4)' }}>
-                  <td className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: f.color }}>{f.code}</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-secondary)' }}>{f.company}</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>{f.mgmtFee.toFixed(2)}%</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>{f.ter.toFixed(2)}%</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>{f.frontEnd.toFixed(1)}%</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>{f.backEnd.toFixed(1)}%</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-secondary)' }}>{f.type}</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-secondary)' }}>{f.inception}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+        </ContentCard>
+
+        <DataTable
+          headers={['กองทุน','บลจ.','Mgmt Fee','TER','Front-End','Back-End','ประเภท','วันจัดตั้ง']}
+          keyExtractor={(_, i) => funds[i].code}
+          rows={funds.map(f => [
+            { value: f.code, style: { fontWeight: 600, color: f.color } },
+            f.company,
+            `${f.mgmtFee.toFixed(2)}%`,
+            `${f.ter.toFixed(2)}%`,
+            `${f.frontEnd.toFixed(1)}%`,
+            `${f.backEnd.toFixed(1)}%`,
+            f.type,
+            f.inception,
+          ])}
+        />
+      </ContentSection>
 
       {/* Performance */}
-      <section className="mb-12">
-        <h2 className="text-xl font-bold mb-6 flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
-          <span className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: 'rgba(16,185,129,0.15)' }}>📈</span>
-          ผลตอบแทนย้อนหลัง
-        </h2>
-        <div className="glass-card p-6">
-          <h3 className="text-base font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>ผลตอบแทนย้อนหลังเปรียบเทียบ (Annualized %)</h3>
-          <p className="text-xs mb-5" style={{ color: 'var(--color-text-muted)' }}>ข้อมูล ณ วันที่ 31 มีนาคม 2569</p>
-          <div className="flex flex-wrap gap-2 mb-5">
+      <ContentSection
+        icon="📈"
+        iconBg="rgba(16,185,129,0.12)"
+        title="ผลตอบแทนย้อนหลัง"
+      >
+        <ContentCard
+          title="ผลตอบแทนย้อนหลังเปรียบเทียบ (Annualized %)"
+          subtitle="ข้อมูล ณ วันที่ 31 มีนาคม 2569"
+        >
+          <div className="flex flex-wrap" style={{ gap: '0.5rem', marginBottom: '1.5rem' }}>
             {perfPeriods.map(p => (
               <button key={p.key} onClick={() => setPerfPeriod(p.key)}
-                className="px-4 py-2 rounded-xl text-xs font-medium transition-all hover:cursor-pointer"
+                className="font-medium transition-all hover:cursor-pointer"
                 style={{
+                  padding: '8px 16px', borderRadius: '12px', fontSize: '0.75rem',
                   background: perfPeriod === p.key ? 'var(--color-accent-blue)' : 'transparent',
                   color: perfPeriod === p.key ? 'white' : 'var(--color-text-secondary)',
                   border: `1px solid ${perfPeriod === p.key ? 'var(--color-accent-blue)' : 'var(--color-border)'}`,
@@ -335,44 +328,44 @@ export default function GlobalEquityFundsTh() {
             ))}
           </div>
           <PerfChart period={perfPeriod} />
-        </div>
-      </section>
+        </ContentCard>
+      </ContentSection>
 
       {/* NAV Growth */}
-      <section className="mb-12">
-        <h2 className="text-xl font-bold mb-6 flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
-          <span className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: 'rgba(139,92,246,0.15)' }}>📉</span>
-          จำลอง NAV Growth ตั้งแต่จัดตั้ง
-        </h2>
-        <div className="glass-card p-6">
-          <h3 className="text-base font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>การเติบโตของ NAV จาก 10 บาท (Simulated)</h3>
-          <p className="text-xs mb-5" style={{ color: 'var(--color-text-muted)' }}>สมมติ NAV เริ่มต้น 10 บาท โดยใช้ Annualized Return ตั้งแต่จัดตั้ง</p>
+      <ContentSection
+        icon="📉"
+        iconBg="rgba(139,92,246,0.12)"
+        title="จำลอง NAV Growth ตั้งแต่จัดตั้ง"
+      >
+        <ContentCard
+          title="การเติบโตของ NAV จาก 10 บาท (Simulated)"
+          subtitle="สมมติ NAV เริ่มต้น 10 บาท โดยใช้ Annualized Return ตั้งแต่จัดตั้ง"
+        >
           <NavGrowthChart />
-          {/* Legend */}
-          <div className="flex flex-wrap gap-4 mt-4 justify-center">
+          <div className="chart-legend">
             {funds.map(f => (
-              <div key={f.code} className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                <div className="w-3 h-3 rounded-sm" style={{ background: f.color }} />
+              <div key={f.code} className="chart-legend-item">
+                <div className="chart-legend-dot" style={{ background: f.color }} />
                 {f.code}
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </ContentCard>
+      </ContentSection>
 
       {/* Backtest */}
-      <section className="mb-12">
-        <h2 className="text-xl font-bold mb-6 flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
-          <span className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: 'rgba(6,182,212,0.15)' }}>🔬</span>
-          Backtest: DCA vs Lump Sum
-        </h2>
-
+      <ContentSection
+        icon="🔬"
+        iconBg="rgba(6,182,212,0.12)"
+        title="Backtest: DCA vs Lump Sum"
+      >
         {/* Fund Selector */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap" style={{ gap: '0.5rem', marginBottom: '1.5rem' }}>
           {funds.map((f,i) => (
             <button key={f.code} onClick={() => setBacktestIdx(i)}
-              className="px-4 py-2 rounded-xl text-xs font-medium transition-all hover:cursor-pointer"
+              className="font-medium transition-all hover:cursor-pointer"
               style={{
+                padding: '8px 16px', borderRadius: '12px', fontSize: '0.75rem',
                 background: backtestIdx === i ? f.color : 'transparent',
                 color: backtestIdx === i ? 'white' : 'var(--color-text-secondary)',
                 border: `1px solid ${backtestIdx === i ? f.color : 'var(--color-border)'}`,
@@ -382,65 +375,56 @@ export default function GlobalEquityFundsTh() {
           ))}
         </div>
 
-        <div className="glass-card p-6 mb-6">
-          <h3 className="text-base font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>
-            Backtest: {backtestResults[backtestIdx].fund.code} — DCA vs Lump Sum
-          </h3>
-          <p className="text-xs mb-5" style={{ color: 'var(--color-text-muted)' }}>
-            ระยะเวลา {backtestResults[backtestIdx].totalYears.toFixed(1)} ปี ({backtestResults[backtestIdx].totalMonths} เดือน) • เงินลงทุนรวม ฿{backtestResults[backtestIdx].totalInvestment.toLocaleString()}
-          </p>
+        <ContentCard
+          title={`Backtest: ${backtestResults[backtestIdx].fund.code} — DCA vs Lump Sum`}
+          subtitle={`ระยะเวลา ${backtestResults[backtestIdx].totalYears.toFixed(1)} ปี (${backtestResults[backtestIdx].totalMonths} เดือน) • เงินลงทุนรวม ฿${backtestResults[backtestIdx].totalInvestment.toLocaleString()}`}
+          style={{ marginBottom: '1.5rem' }}
+        >
           <BacktestChart resultIndex={backtestIdx} />
-          {/* Legend */}
-          <div className="flex flex-wrap gap-5 mt-4 justify-center text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-            <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm" style={{ background: '#f59e0b' }} />Lump Sum (฿{Math.round(backtestResults[backtestIdx].lsFinal).toLocaleString()})</div>
-            <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm" style={{ background: '#3b82f6' }} />DCA (฿{Math.round(backtestResults[backtestIdx].dcaFinal).toLocaleString()})</div>
-            <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm border border-dashed" style={{ borderColor: 'var(--color-text-muted)' }} />เงินลงทุน</div>
+          <div className="chart-legend">
+            <div className="chart-legend-item">
+              <div className="chart-legend-dot" style={{ background: '#f59e0b' }} />
+              Lump Sum (฿{Math.round(backtestResults[backtestIdx].lsFinal).toLocaleString()})
+            </div>
+            <div className="chart-legend-item">
+              <div className="chart-legend-dot" style={{ background: '#3b82f6' }} />
+              DCA (฿{Math.round(backtestResults[backtestIdx].dcaFinal).toLocaleString()})
+            </div>
+            <div className="chart-legend-item">
+              <div className="chart-legend-dot" style={{ background: 'transparent', border: '2px dashed var(--color-text-muted)' }} />
+              เงินลงทุน
+            </div>
           </div>
-        </div>
+        </ContentCard>
 
-        {/* Backtest Summary */}
-        <div className="glass-card p-6 mb-6">
-          <h3 className="text-base font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>สรุปผลลัพธ์ DCA vs Lump Sum</h3>
-          <p className="text-xs mb-5" style={{ color: 'var(--color-text-muted)' }}>เปรียบเทียบมูลค่าพอร์ต ณ ปัจจุบัน</p>
+        <ContentCard
+          title="สรุปผลลัพธ์ DCA vs Lump Sum"
+          subtitle="เปรียบเทียบมูลค่าพอร์ต ณ ปัจจุบัน"
+          style={{ marginBottom: '1.5rem' }}
+        >
           <BacktestSummaryChart />
-        </div>
+        </ContentCard>
 
-        {/* Backtest Table */}
-        <div className="glass-card overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                {['กองทุน','ระยะเวลา','เงินลงทุน','Lump Sum มูลค่า','Lump Sum P/L','DCA มูลค่า','DCA P/L','ดีกว่า'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold whitespace-nowrap" style={{ color: 'var(--color-text-muted)', background: 'var(--color-bg-card)' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {backtestResults.map(r => (
-                <tr key={r.fund.code} className="hover:bg-white/[0.02] transition-colors" style={{ borderBottom: '1px solid rgba(42,53,85,0.4)' }}>
-                  <td className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: r.fund.color }}>{r.fund.code}</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-secondary)' }}>{r.totalYears.toFixed(1)} ปี</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>฿{r.totalInvestment.toLocaleString()}</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>฿{Math.round(r.lsFinal).toLocaleString()}</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: r.lsProfit >= 0 ? '#10b981' : '#ef4444' }}>
-                    {r.lsProfit>=0?'+':''}฿{Math.round(r.lsProfit).toLocaleString()} ({r.lsReturn>=0?'+':''}{r.lsReturn.toFixed(1)}%)
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>฿{Math.round(r.dcaFinal).toLocaleString()}</td>
-                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: r.dcaProfit >= 0 ? '#10b981' : '#ef4444' }}>
-                    {r.dcaProfit>=0?'+':''}฿{Math.round(r.dcaProfit).toLocaleString()} ({r.dcaReturn>=0?'+':''}{r.dcaReturn.toFixed(1)}%)
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap font-bold" style={{ color: r.winner === 'Lump Sum' ? '#f59e0b' : '#3b82f6' }}>{r.winner}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+        <DataTable
+          headers={['กองทุน','ระยะเวลา','เงินลงทุน','Lump Sum มูลค่า','Lump Sum P/L','DCA มูลค่า','DCA P/L','ดีกว่า']}
+          keyExtractor={(_, i) => backtestResults[i].fund.code}
+          rows={backtestResults.map(r => [
+            { value: r.fund.code, style: { fontWeight: 600, color: r.fund.color } },
+            `${r.totalYears.toFixed(1)} ปี`,
+            `฿${r.totalInvestment.toLocaleString()}`,
+            `฿${Math.round(r.lsFinal).toLocaleString()}`,
+            { value: `${r.lsProfit>=0?'+':''}฿${Math.round(r.lsProfit).toLocaleString()} (${r.lsReturn>=0?'+':''}${r.lsReturn.toFixed(1)}%)`, style: { color: r.lsProfit >= 0 ? '#10b981' : '#ef4444' } },
+            `฿${Math.round(r.dcaFinal).toLocaleString()}`,
+            { value: `${r.dcaProfit>=0?'+':''}฿${Math.round(r.dcaProfit).toLocaleString()} (${r.dcaReturn>=0?'+':''}${r.dcaReturn.toFixed(1)}%)`, style: { color: r.dcaProfit >= 0 ? '#10b981' : '#ef4444' } },
+            { value: r.winner, style: { fontWeight: 700, color: r.winner === 'Lump Sum' ? '#f59e0b' : '#3b82f6' } },
+          ])}
+        />
+      </ContentSection>
 
       {/* Disclaimer */}
-      <div className="glass-card p-6 mt-8" style={{ borderColor: 'rgba(245,158,11,0.3)' }}>
-        <h4 className="text-sm font-bold mb-2" style={{ color: 'var(--color-accent-orange)' }}>⚠️ คำเตือน</h4>
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+      <div className="disclaimer-card">
+        <h4>⚠️ คำเตือน</h4>
+        <p>
           รายงานฉบับนี้จัดทำขึ้นเพื่อการศึกษาและวิจัยเท่านั้น ไม่ถือเป็นคำแนะนำในการลงทุน การลงทุนมีความเสี่ยง ผู้ลงทุนควรทำความเข้าใจลักษณะสินค้า เงื่อนไขผลตอบแทน และความเสี่ยงก่อนตัดสินใจลงทุน ผลการดำเนินงานในอดีตไม่ได้เป็นสิ่งยืนยันถึงผลการดำเนินงานในอนาคต ข้อมูลอ้างอิงจาก WealthMagik, Finnomena, Investing.com และเว็บไซต์ของ บลจ. แต่ละแห่ง
         </p>
       </div>

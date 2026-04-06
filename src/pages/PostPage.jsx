@@ -101,7 +101,9 @@ export default function PostPage() {
 
       {/* Post Content */}
       {PostContent ? (
-        <PostContent />
+        <div className="article-content">
+          <PostContent />
+        </div>
       ) : (
         <div className="text-center" style={{ padding: '5rem 0' }}>
           <p style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🚧</p>
