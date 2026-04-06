@@ -3,12 +3,12 @@ import PostCard from './PostCard'
 export default function PostList({ posts, title, subtitle }) {
   if (!posts || posts.length === 0) {
     return (
-      <div className="text-center py-20">
-        <p className="text-6xl mb-4">📭</p>
-        <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+      <div className="text-center" style={{ padding: '5rem 0' }}>
+        <p style={{ fontSize: '4rem', marginBottom: '1rem' }}>📭</p>
+        <h3 className="font-bold" style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: 'var(--color-text-primary)' }}>
           No posts yet
         </h3>
-        <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+        <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
           Stay tuned — new research is coming soon!
         </p>
       </div>
@@ -18,20 +18,26 @@ export default function PostList({ posts, title, subtitle }) {
   return (
     <div>
       {(title || subtitle) && (
-        <div className="mb-8">
+        <div style={{ marginBottom: '2rem' }}>
           {title && (
-            <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+            <h2 className="font-bold" style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--color-text-primary)' }}>
               {title}
             </h2>
           )}
           {subtitle && (
-            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+            <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
               {subtitle}
             </p>
           )}
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: posts.length === 1
+          ? 'minmax(0, 480px)'
+          : 'repeat(auto-fill, minmax(320px, 1fr))',
+        gap: '1.5rem',
+      }}>
         {posts.map((post, i) => (
           <PostCard key={post.id} post={post} index={i} />
         ))}

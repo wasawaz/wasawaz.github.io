@@ -36,9 +36,9 @@ export default function App() {
           <Route path="/category/:id" element={<Category />} />
           <Route path="/search" element={<Search />} />
           <Route path="*" element={
-            <div className="max-w-7xl mx-auto px-4 pt-24 pb-12 text-center">
-              <p className="text-6xl mb-4">🤖</p>
-              <h1 className="text-3xl font-black mb-2" style={{ color: 'var(--color-text-primary)' }}>404</h1>
+            <div className="section-container text-center" style={{ paddingTop: '7rem', paddingBottom: '3rem' }}>
+              <p style={{ fontSize: '4rem', marginBottom: '1rem' }}>🤖</p>
+              <h1 className="font-black" style={{ fontSize: '1.875rem', marginBottom: '0.5rem', color: 'var(--color-text-primary)' }}>404</h1>
               <p style={{ color: 'var(--color-text-muted)' }}>Page not found</p>
             </div>
           } />

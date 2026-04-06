@@ -12,22 +12,23 @@ export default function Blog() {
     : posts.filter(p => p.category === activeCategory)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 animate-fade-in">
+    <div className="section-container animate-fade-in" style={{ paddingTop: '7rem', paddingBottom: '3rem' }}>
       {/* Header */}
-      <div className="mb-10">
-        <h1 className="text-3xl font-black mb-3" style={{ color: 'var(--color-text-primary)' }}>
+      <div style={{ marginBottom: '2.5rem' }}>
+        <h1 className="font-black" style={{ fontSize: '1.875rem', marginBottom: '0.75rem', color: 'var(--color-text-primary)' }}>
           📚 All Posts
         </h1>
-        <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+        <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
           Browse all research articles • เรียกดูบทความทั้งหมด
         </p>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap" style={{ gap: '0.5rem', marginBottom: '2rem' }}>
         <button onClick={() => setActiveCategory('all')}
-          className="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:cursor-pointer"
+          className="font-medium transition-all duration-200 hover:cursor-pointer"
           style={{
+            padding: '8px 16px', borderRadius: '12px', fontSize: '0.875rem',
             background: activeCategory === 'all' ? 'var(--color-accent-blue)' : 'var(--color-bg-card)',
             color: activeCategory === 'all' ? 'white' : 'var(--color-text-secondary)',
             border: `1px solid ${activeCategory === 'all' ? 'var(--color-accent-blue)' : 'var(--color-border)'}`,
@@ -38,13 +39,14 @@ export default function Blog() {
           const count = posts.filter(p => p.category === cat.id).length
           return (
             <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
-              className="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-1.5 hover:cursor-pointer"
+              className="font-medium transition-all duration-200 flex items-center hover:cursor-pointer"
               style={{
+                padding: '8px 16px', borderRadius: '12px', fontSize: '0.875rem', gap: '6px',
                 background: activeCategory === cat.id ? cat.color : 'var(--color-bg-card)',
                 color: activeCategory === cat.id ? 'white' : 'var(--color-text-secondary)',
                 border: `1px solid ${activeCategory === cat.id ? cat.color : 'var(--color-border)'}`,
               }}>
-              <cat.icon className="w-4 h-4" />
+              <cat.icon style={{ width: '16px', height: '16px' }} />
               {cat.name} ({count})
             </button>
           )

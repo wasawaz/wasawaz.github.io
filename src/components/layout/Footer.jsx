@@ -4,41 +4,44 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="border-t mt-20" style={{ borderColor: 'var(--color-border)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+    <footer style={{ borderTop: '1px solid var(--color-border)', marginTop: '5rem' }}>
+      <div className="section-container" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
+        <div className="flex flex-col md:flex-row items-center justify-between" style={{ gap: '1.5rem' }}>
           {/* Logo & Description */}
           <div className="text-center md:text-left">
-            <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-white text-sm"
-                style={{ background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' }}>
+            <div className="flex items-center justify-center md:justify-start" style={{ gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <div className="flex items-center justify-center font-bold text-white"
+                style={{ width: '28px', height: '28px', borderRadius: '8px', fontSize: '0.875rem', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' }}>
                 T
               </div>
-              <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+              <span className="font-semibold" style={{ fontSize: '0.875rem', color: 'var(--color-text-primary)' }}>
                 Technoob Hub
               </span>
             </div>
-            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+            <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
               Personal Research Knowledge Base
             </p>
           </div>
 
           {/* Made with love */}
-          <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+          <div className="flex items-center" style={{ gap: '6px', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
             <span>Made with</span>
-            <HeartIcon className="w-3.5 h-3.5" style={{ color: 'var(--color-accent-red)' }} />
+            <HeartIcon style={{ width: '14px', height: '14px', color: 'var(--color-accent-red)' }} />
             <span>by Wasawaz</span>
             <span>•</span>
             <span>© {year}</span>
           </div>
 
           {/* Tech Stack */}
-          <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+          <div className="flex items-center" style={{ gap: '0.75rem', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
             <span>Built with</span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center" style={{ gap: '0.5rem' }}>
               {['React', 'Vite', 'Tailwind', 'D3'].map(tech => (
-                <span key={tech} className="px-2 py-0.5 rounded-md text-[10px] font-medium"
-                  style={{ background: 'var(--color-bg-card)', color: 'var(--color-text-secondary)' }}>
+                <span key={tech} className="font-medium"
+                  style={{
+                    padding: '2px 8px', borderRadius: '6px', fontSize: '10px',
+                    background: 'var(--color-bg-card)', color: 'var(--color-text-secondary)',
+                  }}>
                   {tech}
                 </span>
               ))}

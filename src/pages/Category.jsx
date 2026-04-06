@@ -10,9 +10,9 @@ export default function Category() {
 
   if (!category) {
     return (
-      <div className="max-w-7xl mx-auto px-4 pt-24 pb-12 text-center">
-        <p className="text-6xl mb-4">🤷</p>
-        <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>Category not found</h1>
+      <div className="section-container text-center" style={{ paddingTop: '7rem', paddingBottom: '3rem' }}>
+        <p style={{ fontSize: '4rem', marginBottom: '1rem' }}>🤷</p>
+        <h1 className="font-bold" style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--color-text-primary)' }}>Category not found</h1>
         <p style={{ color: 'var(--color-text-muted)' }}>ไม่พบหมวดหมู่ที่ค้นหา</p>
       </div>
     )
@@ -21,18 +21,18 @@ export default function Category() {
   const Icon = category.icon
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 animate-fade-in">
+    <div className="section-container animate-fade-in" style={{ paddingTop: '7rem', paddingBottom: '3rem' }}>
       {/* Header */}
-      <div className="flex items-center gap-4 mb-10">
-        <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-          style={{ background: `${category.color}15` }}>
-          <Icon className="w-7 h-7" style={{ color: category.color }} />
+      <div className="flex items-center" style={{ gap: '1rem', marginBottom: '2.5rem' }}>
+        <div className="flex items-center justify-center"
+          style={{ width: '56px', height: '56px', borderRadius: '16px', background: `${category.color}15` }}>
+          <Icon style={{ width: '28px', height: '28px', color: category.color }} />
         </div>
         <div>
-          <h1 className="text-3xl font-black" style={{ color: 'var(--color-text-primary)' }}>
+          <h1 className="font-black" style={{ fontSize: '1.875rem', color: 'var(--color-text-primary)' }}>
             {category.name}
           </h1>
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
             {category.nameTh} • {category.description}
           </p>
         </div>

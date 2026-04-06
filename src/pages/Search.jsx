@@ -8,12 +8,12 @@ export default function Search() {
   const results = searchPosts(query)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 animate-fade-in">
-      <div className="mb-10">
-        <h1 className="text-3xl font-black mb-3" style={{ color: 'var(--color-text-primary)' }}>
+    <div className="section-container animate-fade-in" style={{ paddingTop: '7rem', paddingBottom: '3rem' }}>
+      <div style={{ marginBottom: '2.5rem' }}>
+        <h1 className="font-black" style={{ fontSize: '1.875rem', marginBottom: '0.75rem', color: 'var(--color-text-primary)' }}>
           🔍 Search Results
         </h1>
-        <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+        <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
           {results.length} result{results.length !== 1 ? 's' : ''} for "{query}"
         </p>
       </div>
